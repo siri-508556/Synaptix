@@ -92,6 +92,12 @@ class AnomalyTransformer:
 
 app = Flask(__name__)
 CORS(app)
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "status": "Synaptix backend is running",
+        "message": "Use POST /upload to detect anomalies"
+    })
 
 UPLOAD_FOLDER = './uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
