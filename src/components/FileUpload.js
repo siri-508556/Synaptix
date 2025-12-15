@@ -61,18 +61,32 @@ const FileUpload = ({ onFileUpload }) => {
         }
     };
 
-    const handleFileUpload = () => {
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const fileContent = e.target.result;
-                onFileUpload(fileContent);
-            };
-            reader.readAsText(file);
-        } else {
-            alert('No file selected. Please choose a CSV file first.');
-        }
-    };
+   const handleFileUpload = async () => {
+    if (!file) {
+        alert("Please select a CSV file first.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch(
+            "https://synaptix-3.onrender.com/upload",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const result = await response.json();
+        onFileUpload(result); // send backend response to parent
+    } catch (error) {
+        console.error("Upload failed:", error);
+        alert("File upload failed.");
+    }
+};
+
 
     return (
         <div className="upload-container">
